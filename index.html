@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#F9F6F0">
+  <meta name="description" content="NexCafe — ruang kecil untuk kopi yang baik, makanan hangat, dan cerita yang tinggal lebih lama.">
+  <title>NexCafe — Coffee, Food & Stories</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <div class="announcement"><span>KOPI YANG BAIK, MOMEN YANG PELAN.</span><span class="announcement-right" id="liveStatus"></span></div>
+
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="NexCafe beranda">
+      <span class="brand-mark">N<span>C</span></span>
+      <span class="brand-name">Nex<span>Cafe</span><small>KOPI · MAKANAN · CERITA</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Navigasi utama">
+      <a class="nav-link active" href="#home">Beranda</a>
+      <a class="nav-link" href="#menu">Menu</a>
+      <a class="nav-link" href="#story">Cerita Kami</a>
+    </nav>
+    <nav class="main-nav" id="mainNav" aria-label="Menu navigasi">
+      <a class="nav-link active" href="#home">Beranda</a>
+      <a class="nav-link" href="#menu">Menu</a>
+      <a class="nav-link" href="#story">Cerita Kami</a>
+      <a class="nav-link" href="#profile">Profil</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-button theme-toggle" id="themeToggle" aria-label="Ganti tema" title="Ganti tema"><svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 13.2A8.6 8.6 0 0 1 10.8 3.2 8.7 8.7 0 1 0 20.8 13.2Z"/></svg></button>
+      <button class="cart-trigger" id="cartOpen" aria-label="Buka keranjang"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="cart-label">Tas</span><span id="cartCount">0</span></button>
+      <button class="mobile-menu-button" id="mobileMenuButton" aria-label="Buka navigasi"><svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero section-wrap" id="home">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="eyebrow-line"></span> SELAMAT DATANG DI NEXCAFE</p>
+        <h1>Rasa Baik<br>untuk Menemani<br><em>Jeda Harimu.</em></h1>
+        <p class="hero-description">Dari kopi susu gula aren, nasi goreng rempah, sampai jajanan kaki lima favorit, semuanya dibuat segar untuk menemani jeda di tengah harimu.</p>
+        <div class="hero-actions">
+          <a class="button button-dark" href="#menu">Jelajahi Menu <span>↗</span></a>
+          <a class="text-link" href="#story">Tentang kami <span>→</span></a>
+        </div>
+        <dl class="hero-stats" aria-label="Sekilas NexCafe">
+          <div><dd><span class="count" data-stat="menu">43</span></dd><dt>Pilihan menu</dt></div>
+          <div><dd><span class="count" data-stat="rating" data-decimals="1">4.6</span><small>★</small></dd><dt>Rating rata-rata</dt></div>
+          <div><dd><span class="count" data-stat="promo">8</span></dd><dt>Menu diskon 20%</dt></div>
+        </dl>      </div>
+      <div class="hero-visual reveal">
+        <div class="hero-image-main">
+          <img src="" data-media="secangkir-kopi-di-meja-kafe" alt="Secangkir kopi di meja kafe" fetchpriority="high">
+        </div>
+      </div>
+    </section>
+    <section class="menu-section section-space" id="menu">
+      <div class="section-wrap">
+        <div class="section-heading menu-heading reveal">
+          <div><p class="eyebrow">KATALOG NEXCAFE</p><h2>A menu worth<br><em>lingering over.</em></h2></div>
+          <p class="section-intro">Dari tegukan pertama sampai gigitan terakhir, temukan teman terbaik untuk harimu.</p>
+        </div>
+        <div class="menu-tools reveal">
+          <label class="search-box"><span>⌕</span><input id="menuSearch" type="search" placeholder="Cari nasi goreng, kopi gula aren, cireng..." aria-label="Cari menu"><kbd>↵</kbd></label>
+        </div>
+        <div class="category-filters sticky-category mobile-category-filters" id="categoryFilters" role="group" aria-label="Kategori menu"></div>
+        <div class="menu-layout">
+          <aside class="menu-sidebar" aria-label="Panel filter menu">
+            <p class="eyebrow">TEMUKAN FAVORITMU</p>
+            <h3>Filter & <em>urutkan.</em></h3>
+            <div class="desktop-filter-group"><span class="filter-group-title">KATEGORI</span><div class="desktop-category-filters" id="desktopCategoryFilters" role="group" aria-label="Kategori menu desktop"></div></div>
+            <div class="desktop-filter-group"><span class="filter-group-title">PILIHAN CEPAT · BISA GABUNG</span><div class="desktop-check-filters" role="group" aria-label="Filter menu gabungan"><label><input type="checkbox" id="desktopFeatured"> Best seller / Signature</label><label><input type="checkbox" id="desktopSpicy"> Menu pedas</label><label><input type="checkbox" id="desktopNonCoffee"> Non-coffee</label><label><input type="checkbox" id="desktopFavorite"> Favorit saya</label></div></div>
+            <div class="desktop-filter-group"><span class="filter-group-title">RENTANG HARGA</span><div class="price-range-fields desktop-price-range"><label>Minimum (Rp)<input type="number" id="desktopMinPrice" min="0" step="1000" placeholder="0"></label><label>Maksimum (Rp)<input type="number" id="desktopMaxPrice" min="0" step="1000" placeholder="Tanpa batas"></label></div></div>
+            <div class="desktop-filter-group"><span class="filter-group-title">RATING MINIMUM</span><select id="desktopMinRating" class="sort-select"><option value="0">Semua rating</option><option value="4">4.0 ke atas</option><option value="4.5">4.5 ke atas</option><option value="4.8">4.8 ke atas</option></select></div>
+            <div class="desktop-filter-group"><span class="filter-group-title">URUTKAN</span><select id="desktopSort" class="sort-select" aria-label="Urutkan menu"><option value="default">Rekomendasi</option><option value="price-low">Harga terendah</option><option value="price-high">Harga tertinggi</option><option value="rating">Rating tertinggi</option><option value="name">Nama A–Z</option></select></div>
+            <button type="button" class="button button-outline full-button desktop-reset" id="resetFilters">Reset filter</button>
+          </aside>
+          <div class="menu-results">
+            <div class="mobile-filter-toolbar"><span id="mobileFilterSummary">Semua menu</span><button type="button" class="mobile-filter-open" id="mobileFilterOpen"><svg class="ui-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9m4 0h3M4 17h3m4 0h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg> Filter & Urutkan</button></div>
+            <div class="menu-result-line"><span id="resultCount">43 menu pilihan</span><span>DIBUAT SEGAR, SELALU.</span></div>
+            <div class="menu-grid catalog-pages" id="menuGrid" aria-live="polite" aria-label="Katalog menu"></div>
+            <nav class="catalog-pager hidden" id="catalogPager" aria-label="Halaman katalog">
+              <button class="catalog-arrow" id="catalogPrev" type="button" aria-label="Halaman sebelumnya" title="Sebelumnya"><svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+              <span class="catalog-page-info" id="catalogPageInfo" aria-live="polite">1 / 1</span>
+              <button class="catalog-arrow" id="catalogNext" type="button" aria-label="Halaman berikutnya" title="Berikutnya"><svg class="ui-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+            </nav>
+            <div class="menu-more"><button class="button button-outline hidden" id="menuMore" type="button">Tampilkan lebih banyak</button></div>
+            <div class="no-results hidden" id="noResults">Menu belum ditemukan. Coba kata kunci lain, ya.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story section-space section-wrap" id="story">
+      <div class="story-topline reveal"><p class="eyebrow">CERITA KAMI</p><span>SEJAK 2019</span></div>
+      <div class="story-layout">
+        <div class="story-heading reveal"><h2>Coffee, food<br>&amp; <em>stories.</em></h2><div class="story-pullquote">“Kami percaya hal sederhana, ketika dibuat dengan sepenuh hati, bisa menjadi bagian terbaik dari hari seseorang.”</div></div>
+        <div class="story-copy reveal"><p class="story-lead">NexCafe bermula dari satu meja kayu, dua sahabat, dan satu pertanyaan sederhana: kenapa susah menemukan tempat yang enak untuk ngopi, makan kenyang, dan ngobrol lama sekaligus?</p><p>Kopi hanyalah awalnya. Seiring waktu, NexCafe tumbuh menjadi tempat yang menyajikan kopi, makanan rumahan, hingga jajanan masa kecil, semuanya dibuat segar setiap hari dan disajikan untuk siapa saja yang ingin singgah.</p></div>
+      </div>
+      <ol class="story-timeline reveal">
+        <li><span class="st-year">2019</span><div><h3>Satu meja, satu mesin espresso</h3><p>NexCafe dibuka di sebuah ruko kecil. Menunya sederhana: kopi susu gula aren, teh tarik, dan roti bakar, cukup untuk teman-teman yang betah duduk berjam-jam.</p></div></li>
+        <li><span class="st-year">2021</span><div><h3>Dapur ikut bercerita</h3><p>Pelanggan mulai bertanya, “ada yang lebih mengenyangkan?” Lahirlah nasi goreng bumbu rempah, soto ayam, dan ayam geprek, resep dari dapur rumah dan warung langganan kami.</p></div></li>
+        <li><span class="st-year">2023</span><div><h3>Jajanan kaki lima naik kelas</h3><p>Cireng, batagor, seblak, cimol, hingga es cendol: jajanan favorit yang kami buat segar dengan bahan pilihan, tanpa meninggalkan rasa aslinya.</p></div></li>
+        <li><span class="st-year">2025</span><div><h3>Ruang yang lebih lapang</h3><p>Area indoor dan outdoor dibuka. Kamu bisa memilih meja favorit dan memesan langsung dari website, sementara kami menyiapkan semuanya.</p></div></li>
+      </ol>
+      <p class="story-closing reveal">Hari ini menu kami sudah berkembang jauh dari sekadar kopi. Resepnya boleh bertambah, tapi niatnya tetap sama: kamu pulang dengan perut kenyang dan hati yang lebih ringan.</p>
+    </section>
+
+    <section class="reviews section-wrap section-space" id="reviews">
+      <div class="section-heading reveal"><div><p class="eyebrow">ULASAN PELANGGAN</p><h2>Apa kata <em>orang.</em></h2></div><p class="section-intro">Cerita dari pelanggan yang menikmati waktu mereka di NexCafe.</p></div>
+      <div class="review-summary reveal"><span class="review-score" id="reviewScore">4,8</span><div><span class="stars" aria-hidden="true">★★★★★</span><small class="muted" id="reviewCount"></small></div></div>
+      <div class="reviews-grid" id="reviewsGrid"></div>
+    </section>
+
+    <section class="visit-band">
+      <div class="section-wrap visit-inner reveal"><div><p class="eyebrow">MEJAMU SUDAH MENUNGGU</p><h2>Take a little<br><em>time for you.</em></h2></div><div class="visit-details"><p>Datang untuk kopi. Tinggal untuk suasana.</p><p><span>JAM BUKA</span> Setiap hari · 08.00—22.00</p><p><span>LOKASI</span> Jl. Sukajadi No. 17, Bandung</p><p><span>PESAN</span> Makan di tempat · Bawa pulang</p><a href="#menu" class="button button-light">Temukan favoritmu <span>↗</span></a></div></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-top"><a class="brand footer-brand" href="#home"><span class="brand-mark">N<span>C</span></span><span class="brand-name">Nex<span>Cafe</span><small>KOPI · MAKANAN · CERITA</small></span></a><p>Hal baik butuh waktu.<br><em>Jadi, luangkan waktumu.</em></p><a class="back-top" href="#home">Kembali ke atas ↑</a></div><div class="footer-bottom"><span>© 2026 NEXCAFE. DIBUAT DENGAN SEPENUH HATI.</span><span>KOPI · MAKANAN · MOMEN KECIL</span></div></footer>
+
+  <div class="overlay" id="overlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Keranjang belanja" aria-hidden="true">
+    <div class="drawer-header"><div><p class="eyebrow">PILIHANMU</p><h2>Your bag <em>(<span id="drawerCount">0</span>)</em></h2></div><button class="close-button" id="cartClose" aria-label="Tutup keranjang">×</button></div>
+    <div class="drawer-items" id="cartItems"></div>
+    <div class="drawer-bottom"><details class="drawer-collapse"><summary>Catatan untuk barista <span>Opsional</span></summary><div class="drawer-collapse-content"><label class="note-label" for="orderNote">CATATAN UNTUK BARISTA</label><textarea id="orderNote" rows="2" placeholder="Contoh: less sugar, es sedikit..."></textarea></div></details><details class="drawer-collapse voucher-collapse"><summary>Voucher & promo <span>Punya kode?</span></summary><div class="drawer-collapse-content"><div class="voucher-box"><label class="note-label" for="voucherInput">KODE VOUCHER</label><div class="voucher-row"><input id="voucherInput" placeholder="Masukkan kode" autocomplete="off"><button type="button" id="voucherApply">Pakai</button></div><small id="voucherMsg" class="tiny-note" aria-live="polite"></small></div></div></details><div class="price-line"><span>Subtotal</span><strong id="cartSubtotal">Rp 0</strong></div><div class="price-line discount-line hidden" id="cartDiscountLine"><span>Paket Hemat Ngopi</span><strong id="cartDiscount">− Rp 0</strong></div><div class="price-line discount-line hidden" id="cartVoucherLine"><span id="cartVoucherLabel">Voucher</span><strong id="cartVoucherAmt">− Rp 0</strong></div><div class="price-line"><span>Pajak layanan (5%)</span><strong id="cartTax">Rp 0</strong></div><div class="price-line total-line" id="cart-total-container" aria-live="polite" aria-atomic="true"><span>Total Belanja</span><strong id="cartTotal">Rp 0</strong></div><button class="button button-dark full-button" id="checkoutButton">Lanjut ke checkout <span>↗</span></button><p class="drawer-footnote">Pilih metode pembayaran yang paling nyaman untukmu.</p></div>
+  </aside>
+
+  <div class="modal-wrap auth-gate" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
+    <div class="modal-card auth-card auth-card-modern">
+      <button class="close-button modal-close auth-close" data-close-modal aria-label="Tutup" type="button">×</button>
+      <p class="eyebrow">NEXCAFE MEMBERSHIP</p>
+      <h2 id="authTitle">Selamat datang <em>kembali.</em></h2>
+      <p class="modal-intro" id="authIntro">Masuk ke akunmu atau buat akun baru untuk mulai menikmati NexCafe.</p>
+      <div class="auth-tabs" role="tablist" aria-label="Jenis autentikasi">
+        <button type="button" class="auth-tab active" id="showLoginTab" role="tab" aria-selected="true" aria-controls="loginPanel">Masuk</button>
+        <button type="button" class="auth-tab" id="showSignupTab" role="tab" aria-selected="false" aria-controls="signupPanel">Buat akun</button>
+      </div>
+      <section class="auth-panel" id="loginPanel" role="tabpanel" aria-labelledby="showLoginTab">
+        <form id="loginForm" class="auth-form">
+          <label for="loginEmail">Email</label>
+          <input id="loginEmail" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" name="password" type="password" placeholder="Masukkan password" autocomplete="current-password" minlength="8" required>
+          <button class="button button-dark full-button" type="submit">Masuk ke NexCafe <span>↗</span></button>
+        </form>
+        <p class="auth-helper">Belum punya akun? <button type="button" class="auth-inline-link" id="loginToSignup">Daftar sekarang</button></p>
+      </section>
+      <section class="auth-panel hidden" id="signupPanel" role="tabpanel" aria-labelledby="showSignupTab" hidden>
+        <form id="signupForm" class="auth-form">
+          <label for="signupName">Nama lengkap</label>
+          <input id="signupName" name="name" placeholder="Nama kamu" autocomplete="name" required minlength="2" maxlength="60">
+          <label for="signupEmail">Email</label>
+          <input id="signupEmail" name="email" type="email" placeholder="nama@email.com" autocomplete="email" required>
+          <label for="signupPassword">Buat password</label>
+          <input id="signupPassword" name="password" type="password" placeholder="Minimal 8 karakter" autocomplete="new-password" minlength="8" required>
+          <label for="signupPasswordConfirm">Konfirmasi password</label>
+          <input id="signupPasswordConfirm" name="passwordConfirm" type="password" placeholder="Ulangi password" autocomplete="new-password" minlength="8" required>
+          <label class="auth-terms"><input type="checkbox" id="signupTerms" required> <span>Saya setuju data akun disimpan di browser ini.</span></label>
+          <button class="button button-dark full-button" type="submit">Buat akun <span>↗</span></button>
+        </form>
+        <p class="auth-helper">Sudah punya akun? <button type="button" class="auth-inline-link" id="signupToLogin">Masuk</button></p>
+      </section>
+      <p class="auth-local-note">Akun ini disimpan di browser perangkat ini. Belum ada server autentikasi atau sinkronisasi antarperangkat.</p>
+    </div>
+  </div>
+
+  <div class="modal-wrap" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle" aria-hidden="true">
+    <div class="modal-card product-detail-card">
+      <button class="close-button modal-close" data-close-modal aria-label="Tutup">×</button>
+      <div class="pd-photo"><img id="detailImage" src="" alt=""></div>
+      <div class="pd-body">
+        <p class="pd-eyebrow" id="detailCategory">MENU NEXCAFE</p>
+        <h2 id="productModalTitle" class="pd-title">Menu</h2>
+        <div class="detail-price" id="detailPrice">Rp 0</div>
+        <p id="detailDescription" class="pd-desc"></p>
+        <div id="detailRating" class="rating-box"></div>
+        <form id="productOptionsForm">
+          <div id="drinkOptions" class="custom-options pd-options">
+            <div class="pd-field"><label for="sugarLevel">Tingkat manis</label>
+              <select id="sugarLevel" name="sugar"><option value="Normal">Normal</option><option value="Less sugar">Less sugar</option></select></div>
+            <div class="pd-field"><label for="iceLevel">Level es</label>
+              <select id="iceLevel" name="ice"><option value="Normal ice">Normal</option><option value="Less ice">Less ice</option><option value="No ice">No ice</option></select></div>
+          </div>
+          <div id="foodOptions" class="custom-options pd-options hidden">
+            <div class="pd-field pd-field-full"><label for="spiceLevel">Tingkat pedas</label>
+              <select id="spiceLevel" name="spice"><option value="Level 1">Level 1 · ringan</option><option value="Level 2">Level 2 · sedang</option><option value="Level 3">Level 3 · pedas</option></select></div>
+          </div>
+          <div class="pd-field pd-field-full pd-note"><label for="productNote">Catatan tambahan</label>
+            <textarea id="productNote" name="note" rows="2" placeholder="Contoh: acar dipisah ya..."></textarea></div>
+          <div class="detail-action-row"><button class="button button-outline" type="submit">Tambah ke keranjang</button><button class="button button-dark" id="detailOrderNow" type="button">Pesan langsung <span>↗</span></button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-wrap" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle" aria-hidden="true">
+    <div class="modal-card checkout-card"><button class="close-button modal-close" data-close-modal aria-label="Tutup">×</button><p class="eyebrow">HAMPIR JADI MILIKMU</p><h2 id="checkoutTitle">One last <em>step.</em></h2><p class="modal-intro">Pilih jenis pesanan, meja, dan metode pembayaran, lalu periksa kembali detail pesananmu.</p><fieldset class="opt-group type-row"><legend>JENIS PESANAN</legend><label class="opt type-option"><input type="radio" name="orderType" value="Makan di sini" checked><span class="type-option-icon"><svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M2 4v6m2-6v6m-2-3h2m16-3v16"/></svg></span><span><strong>Makan di sini</strong><small>Nikmati di area kafe</small></span></label><label class="opt type-option"><input type="radio" name="orderType" value="Bawa pulang"><span class="type-option-icon"><svg class="ui-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span><span><strong>Bawa pulang</strong><small>Dikemas untuk dibawa</small></span></label></fieldset><div id="tablePicker" class="table-picker"><p class="eyebrow">PILIH MEJA</p><div class="table-area-tabs" id="tableAreaTabs" role="group" aria-label="Pilih area meja"><button type="button" class="area-tab active" data-table-area="Indoor" aria-pressed="true">Indoor</button><button type="button" class="area-tab" data-table-area="Outdoor" aria-pressed="false">Outdoor</button></div><div class="seatmap" id="floorPlan" role="group" aria-label="Denah meja interaktif"></div><div class="sm-legend"><span><i class="free"></i>Kosong</span><span><i class="taken"></i>Terisi</span><span><i class="sel"></i>Pilihanmu</span></div><small id="tableChosen" class="tiny-note sm-chosen">Belum pilih meja.</small></div><div id="checkoutSummary" class="checkout-summary"></div><fieldset class="opt-group"><legend>METODE PEMBAYARAN</legend><div id="payOptions" class="opt-group"></div></fieldset><button class="button button-dark full-button" id="generateQR">Buat kode QR <span>↗</span></button><p class="tiny-note checkout-disclaimer">Pembayaran akan ditampilkan sesuai metode pilihan. Transaksi pada website ini bersifat fiktif.</p></div>
+  </div>
+
+  <div class="modal-wrap" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrTitle" aria-hidden="true">
+    <div class="modal-card qr-card"><button class="close-button modal-close" data-close-modal aria-label="Tutup">×</button><p class="eyebrow">SELESAIKAN PESANANMU</p><h2 id="qrTitle">Scan & <em>settle.</em></h2><p class="modal-intro">Ikuti petunjuk pembayaran di bawah ini untuk menyelesaikan pesananmu.</p><div class="qr-order-number" id="qrOrderNumber">ORDER #NC000000</div><div class="qr-image-frame"><img id="qrImage" alt="Kode pembayaran"><div id="payInstruction" class="pay-instruction hidden"></div><span class="qr-corner qr-corner-a"></span><span class="qr-corner qr-corner-b"></span><span class="qr-corner qr-corner-c"></span><span class="qr-corner qr-corner-d"></span></div><div class="qr-total"><span>TOTAL PEMBAYARAN</span><strong id="qrTotal">Rp 0</strong></div><div class="countdown"><span>BATAS WAKTU PEMBAYARAN</span><strong id="countdownTimer">15:00</strong></div><button class="button button-dark full-button" id="simulatePayment">Konfirmasi pembayaran <span>✓</span></button><p class="tiny-note payment-disclaimer">Alur pembayaran fiktif untuk keperluan website. Tidak terhubung ke bank atau penyedia pembayaran dan tidak memotong saldo.</p></div>
+  </div>
+
+  <div class="modal-wrap" id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptTitle" aria-hidden="true">
+    <div class="modal-card receipt-card"><button class="close-button modal-close" data-close-modal aria-label="Tutup">×</button><div class="receipt-top"><span class="receipt-logo">N<span>C</span></span><p class="eyebrow">SEDIKIT KEJUTAN UNTUKMU</p><h2 id="receiptTitle">That's a <em>wrap.</em></h2><span class="paid-stamp">PEMBAYARAN DITERIMA</span></div><div id="receiptContent" class="receipt-content"></div><div class="receipt-actions"><button class="button button-dark full-button" id="downloadReceipt">Unduh struk (.html) <span>↓</span></button><button class="button button-outline full-button" id="backHome">Kembali ke beranda</button></div><div class="tracker" id="orderTracker"><div class="tracker-heading"><strong>Perjalanan pesananmu</strong><span id="trackerStatus" aria-live="assertive" aria-atomic="true">Pesanan diterima</span></div><div class="tracker-progress"><span id="trackerProgress"></span></div><div class="tracker-steps"><span class="complete">Diterima</span><span>Disiapkan</span><span>Siap</span></div><button class="text-button" id="advanceOrder">Perbarui status pesanan →</button></div></div>
+  </div>
+
+  <div class="modal-wrap" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle" aria-hidden="true"><div class="modal-card profile-sheet-card"><button class="close-button modal-close" data-close-modal aria-label="Tutup">×</button>
+      <div class="profile-sheet-head"><p class="eyebrow">SUDUT NEXCAFE-MU</p><h2 id="profileTitle">A little space <em>for you.</em></h2><p class="section-intro">Satu tempat untuk melihat pesanan, mengumpulkan poin, dan mengatur pengalaman NexCafe-mu.</p></div>
+      <div class="profile-layout">
+        <div class="profile-card">
+          <div class="profile-card-top"><span>KARTU MEMBER / 001</span><span class="member-dot">✳</span></div>
+          <div class="profile-avatar" id="profileAvatar">G</div>
+          <p class="eyebrow">SENANG BERTEMU</p><h3 id="profileName">Guest Member</h3><p id="profileEmail" class="muted">Masuk untuk menyimpan profilmu</p>
+          <div class="loyalty-row"><div><span>POIN KAMU</span><strong id="loyaltyPoints">0 <small>pts</small></strong></div><div class="loyalty-stamp">N<span>C</span></div></div><div class="tier-row"><span class="tier-badge" id="tierBadge">Brew Apprentice</span></div><div class="loyalty-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="10" id="loyaltyBar"><div class="loyalty-progress-fill" id="loyaltyFill"></div></div><small class="progress-label" id="loyaltyLabel"></small><div class="address-card"><span>ALAMAT TERSIMPAN</span><p id="savedAddress">Belum ada alamat tersimpan.</p><button class="text-button" id="editAddress" type="button">Ubah alamat</button></div>
+          <button class="button button-dark full-button" id="profileAuthButton">Masuk / Daftar <span>↗</span></button>
+          <p class="tiny-note">Setiap pesanan member menambah poin loyalitas.</p>
+        </div>
+        <div class="profile-details">
+          <div class="profile-panel"><div class="panel-heading"><h3>Pesanan terakhir</h3><span>RIWAYAT PESANAN</span></div><div id="orderHistory" class="order-history"><p class="empty-copy">Belum ada pesanan. Menu favoritmu mungkin menunggu di sini.</p></div><button class="text-button" id="openHistory" type="button">Lihat semua riwayat →</button></div>
+        </div>
+      </div>
+    
+  </div></div>
+
+  <div class="modal-wrap" id="historyModal" role="dialog" aria-modal="true" aria-labelledby="historyTitle" aria-hidden="true"><div class="modal-card history-card"><button class="close-button modal-close" data-close-modal aria-label="Tutup">×</button><p class="eyebrow">RIWAYAT PEMBELIAN</p><h2 id="historyTitle">Jejak <em>pesananmu.</em></h2><div id="historyList" class="history-list"></div></div></div>
+
+  <div class="modal-wrap lightbox-wrap" id="lightboxModal" role="dialog" aria-modal="true" aria-label="Pratinjau gambar" aria-hidden="true">
+    <div class="modal-card lightbox-card">
+      <button class="close-button modal-close" data-close-modal aria-label="Tutup">×</button>
+      <img id="lightboxImage" src="" alt="">
+      <p class="lightbox-caption" id="lightboxCaption"></p>
+    </div>
+  </div>
+
+
+  <div class="bottom-sheet-overlay" id="filterSheetOverlay" aria-hidden="true">
+    <section class="bottom-sheet-container filter-sheet" id="filterSheet" role="dialog" aria-modal="true" aria-labelledby="filterSheetTitle" tabindex="-1">
+      <div class="bottom-sheet-drag-handle" aria-hidden="true"></div>
+      <div class="sheet-heading"><div><p class="eyebrow">SESUAIKAN PILIHAN</p><h2 id="filterSheetTitle">Filter & <em>urutkan.</em></h2></div><button type="button" class="close-button" data-close-filter aria-label="Tutup filter">×</button></div>
+      <div class="sheet-body">
+        <fieldset class="sheet-filter-group"><legend>FILTER CEPAT</legend>
+          <label class="sheet-check"><input type="checkbox" id="sheetFeatured"> <span>✳ Best seller / Signature</span></label>
+          <label class="sheet-check"><input type="checkbox" id="sheetSpicy"> <span><svg class="ui-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4c1-2 4-2 5 0-2 1-3 2-3 4 0 2 3 3 2 6-1 4-4 7-8 7-3 0-5-2-5-5 0-4 4-6 6-8 1-1 2-2 3-4Z"/><path d="M14 4c0-2 1-3 3-3"/></svg> Menu pedas</span></label>
+          <label class="sheet-check"><input type="checkbox" id="sheetNonCoffee"> <span>☕ Non-coffee</span></label>
+          <label class="sheet-check"><input type="checkbox" id="sheetFavorite"> <span>♥ Favorit saya</span></label>
+        </fieldset>
+        <fieldset class="sheet-filter-group"><legend>RENTANG HARGA</legend><div class="price-range-fields"><label>Minimum (Rp)<input type="number" id="filterMinPrice" min="0" step="1000" placeholder="0"></label><label>Maksimum (Rp)<input type="number" id="filterMaxPrice" min="0" step="1000" placeholder="Tanpa batas"></label></div></fieldset>
+        <fieldset class="sheet-filter-group"><legend>RATING MINIMUM</legend><select id="mobileMinRating" class="sort-select"><option value="0">Semua rating</option><option value="4">4.0 ke atas</option><option value="4.5">4.5 ke atas</option><option value="4.8">4.8 ke atas</option></select></fieldset>
+        <fieldset class="sheet-filter-group"><legend>URUTKAN</legend><select id="mobileSort" class="sort-select"><option value="default">Rekomendasi</option><option value="price-low">Harga terendah</option><option value="price-high">Harga tertinggi</option><option value="rating">Rating tertinggi</option><option value="name">Nama A–Z</option></select></fieldset>
+      </div>
+      <div class="sheet-footer"><button type="button" class="button button-outline" id="clearSheetFilters">Reset</button><button type="button" class="button button-dark" id="applySheetFilters">Terapkan Filter <span>↗</span></button></div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <button class="mini-cart hidden" id="miniCart" type="button" aria-label="Buka tas belanja"><span id="miniCartText"></span><strong id="miniCartTotal"></strong></button>
+  <script src="assets/data/menu.js"></script>
+  <script src="assets/data/content.js"></script>
+  <script src="assets/images/menu/images.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
