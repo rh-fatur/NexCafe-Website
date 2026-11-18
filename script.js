@@ -85,6 +85,10 @@ products.forEach(p => {
   p.image = entry.url || (cached && cached.sig === photoSig(entry) ? cached.url : "");
   if (p.image) usedPhotos.add(p.image);
 });
+/* Foto kartu memakai ukuran lebih kecil (hemat data di HP); Wikimedia menyediakan ukuran thumbnail sesuai permintaan. */
+function photoSized(url, width) {
+  return /^https:\/\/upload\.wikimedia\.org\/.*\/thumb\//.test(url || "") ? url.replace(/\/\d+px-([^/]+)$/, `/${width}px-$1`) : url;
+}
 const imgOf = item => (products.find(p => p.id === item.id)?.image) || item.image || "";
 const PHOTO_SKIP = /(map|logo|icon|flag|diagram|chart|poster|sign|stamp|cover|book|menu|price|stall|warung|vendor|seller|street|market|shop|truck|cart|kitchen|chef|people|crowd|restaurant)/i;
 async function findPhoto(queries) {
@@ -153,7 +157,8 @@ async function resolveMenuPhotos() {
   await Promise.all([worker(), worker(), worker()]);
 }
 let menuLimit = 12;
-const MENU_PAGE_SIZE = 6;
+let menuPageSize = 6;
+let menuCols = 2;
 let menuPage = 1;
 let menuFilterSig = "";
 function renderFilters() {
@@ -304,9 +309,10 @@ function renderMenu() {
   $("#noResults").classList.toggle("hidden", filtered.length !== 0);
   const sig = JSON.stringify([query, activeCategory, activeQuickFilter, advancedFilters]);
   if (sig !== menuFilterSig) { menuFilterSig = sig; menuPage = 1; }
-  const totalPages = Math.max(1, Math.ceil(filtered.length / MENU_PAGE_SIZE));
+  applyCatalogLayout();
+  const totalPages = Math.max(1, Math.ceil(filtered.length / menuPageSize));
   menuPage = Math.min(Math.max(1, menuPage), totalPages);
-  const shown = filtered.slice((menuPage - 1) * MENU_PAGE_SIZE, menuPage * MENU_PAGE_SIZE);
+  const shown = filtered.slice((menuPage - 1) * menuPageSize, menuPage * menuPageSize);
   $("#menuMore").classList.add("hidden");
   $("#catalogPager").classList.toggle("hidden", totalPages <= 1);
   $("#catalogPageInfo").textContent = `${menuPage} / ${totalPages}`;
@@ -317,7 +323,7 @@ function renderMenu() {
     return `
     <article class="menu-card ${product.discount ? "is-promo" : ""}" style="animation-delay:${index*40}ms" data-detail="${product.id}" tabindex="0" aria-label="Lihat detail ${safe(product.name)}">
       <div class="menu-card-image">
-        <img src="${product.image}" alt="${safe(product.name)}" data-emoji="${product.emoji}" loading="lazy">
+        <img src="${photoSized(product.image, 640)}" alt="${safe(product.name)}" data-emoji="${product.emoji}" loading="lazy" decoding="async">
         ${product.discount ? `<span class="disc-badge">-${product.discount}%</span>` : ""}<button class="fav-button ${isFav ? "active" : ""}" data-fav="${product.id}" type="button" aria-label="${isFav ? "Hapus dari favorit" : "Tambah ke favorit"}" aria-pressed="${isFav}">${svgIcon("heart",17)}</button>
         <button class="quick-add" data-quickadd="${product.id}" type="button" aria-label="Tambah ${safe(product.name)} ke keranjang">+ Keranjang</button>
       </div>
@@ -343,7 +349,15 @@ document.addEventListener("keydown", event => {
   openProductDetail(card.dataset.detail);
 });
 
+let productHistory = false;
+window.addEventListener("popstate", () => {
+  if (!productHistory) return;
+  productHistory = false;
+  const modal = $("#productModal");
+  if (modal.classList.contains("open")) closeModal(modal);
+});
 function openProductDetail(id) {
+  if (!productHistory) { try { history.pushState({ nexProduct: true }, ""); productHistory = true; } catch {} }
   const product = products.find(item => item.id === id);
   if (!product) return;
   activeDetailProduct = product;
@@ -380,6 +394,7 @@ function total() { return subtotal() - bundleDiscount() - voucherDiscount() + ta
 function addToCart(id, customization = {}) {
   const product = products.find(item => item.id === id);
   if (!product) return;
+  if (!requireAuth("Masuk dulu untuk menambahkan menu ke keranjang.", () => addToCart(id, customization))) return;
   const options = {
     sugar: customization.sugar || "",
     ice: customization.ice || "",
@@ -453,7 +468,8 @@ function openModal(id) {
   (id === "authModal" && !user ? (modal.querySelector("#signupPanel:not([hidden]) #signupName") || modal.querySelector("#loginEmail")) : modal.querySelector("[data-close-modal]"))?.focus();
 }
 function closeModal(modal) {
-  if (modal.id === "authModal" && !user) return;
+  if (modal.id === "productModal" && productHistory) { productHistory = false; try { history.back(); } catch {} }
+  if (modal.id === "authModal") pendingAuthAction = null;
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden","true");
   if (modal.id === "qrModal") clearInterval(countdownInterval);
@@ -484,24 +500,35 @@ function openAuth() {
     if (confirm("Keluar dari akun NexCafe?")) {
       user = null;
       saveJSON("nexcafe_user", null);
-      document.body.classList.add("auth-required");
       updateProfile();
-      toast("Kamu sudah keluar. Masuk kembali untuk melanjutkan.");
-      setAuthMode("login");
-      openModal("authModal");
+      toast("Kamu sudah keluar dari akun.");
     }
   } else {
+    $("#authIntro").textContent = AUTH_INTRO_DEFAULT;
     setAuthMode("login");
     openModal("authModal");
   }
 }
+const AUTH_INTRO_DEFAULT = $("#authIntro").textContent;
+let pendingAuthAction = null;
+/* Login hanya diminta saat dibutuhkan; setelah masuk, aksi tadi dilanjutkan otomatis. */
+function requireAuth(message, resume) {
+  if (user) return true;
+  pendingAuthAction = resume || null;
+  setAuthMode(storedAccounts.length ? "login" : "signup");
+  $("#authIntro").textContent = message;
+  openModal("authModal");
+  return false;
+}
 function signIn(name, email) {
+  const resume = pendingAuthAction; pendingAuthAction = null;
   user = {name:name.trim(), email:email.trim()};
   saveJSON("nexcafe_user", user);
   document.body.classList.remove("auth-required");
   updateProfile();
   closeAllModals();
   toast(`Selamat datang, ${user.name}!`);
+  if (resume) setTimeout(resume, 350);
 }
 function setAuthMode(mode) {
   const signup = mode === "signup";
@@ -820,12 +847,8 @@ $("#detailOrderNow").addEventListener("click", () => {
     spice: kindOf(activeDetailProduct) === "spice" ? $("#spiceLevel").value : "",
     note: $("#productNote").value
   };
+  if (!requireAuth("Masuk dulu untuk memesan.", () => $("#detailOrderNow").click())) return;
   addToCart(activeDetailProduct.id, customization);
-  if (!user) {
-    openModal("authModal");
-    toast("Masuk dulu untuk melanjutkan checkout.");
-    return;
-  }
   renderCheckoutSummary();
   openModal("checkoutModal");
 });
@@ -855,7 +878,7 @@ $("#mobileMinRating").addEventListener("change",e=>{advancedFilters.minRating=e.
 $("#resetFilters").addEventListener("click",()=>{advancedFilters={featured:false,spicy:false,nonCoffee:false,favorite:false,minPrice:"",maxPrice:"",sort:"default",minRating:"0"};activeQuickFilter="Semua";activeCategory="Semua";$("#menuSearch").value="";menuLimit=12;renderFilters();renderMenu();});
 $("#checkoutButton").addEventListener("click",()=>{
   if(!cart.length)return;
-  if(!user){openModal("authModal");toast("Masuk dulu untuk melanjutkan checkout.");return;}
+  if(!requireAuth("Masuk dulu untuk melanjutkan pemesanan.", () => $("#checkoutButton").click())) return;
   renderCheckoutSummary();
   openModal("checkoutModal");
 });
@@ -929,6 +952,7 @@ function updateLiveStatus(){
 }
 
 function toggleFavorite(id){
+  if (!requireAuth("Masuk dulu untuk menyimpan menu favorit.", () => toggleFavorite(id))) return;
   const wasFav = favorites.includes(id);
   favorites = wasFav ? favorites.filter(f => f !== id) : [...favorites, id];
   saveJSON("nexcafe_favorites", favorites);
@@ -1051,14 +1075,9 @@ if (user && (!user.email || !storedAccounts.some(account => normalizedEmail(acco
   user = null;
   saveJSON("nexcafe_user", null);
 }
-if (!user) {
-  document.body.classList.add("auth-required");
-  setAuthMode(storedAccounts.length ? "login" : "signup");
-  // Defer one frame so the modal is visible after the page's initial layout.
-  requestAnimationFrame(() => openModal("authModal"));
-} else {
-  document.body.classList.remove("auth-required");
-}
+// Pengunjung boleh menjelajah dulu; login baru diminta saat memesan, memasukkan ke keranjang, atau menyukai menu.
+document.body.classList.remove("auth-required");
+setAuthMode(storedAccounts.length ? "login" : "signup");
 
 // Keep the floating mobile cart from covering the footer content.
 (() => {
@@ -1141,5 +1160,65 @@ function tweenMoney(el, to) {
       });
       btn.addEventListener("pointerleave", () => { btn.style.transform = ""; });
     });
+  }
+})();
+
+/* ===== Responsif adaptif: kondisi layar dibaca otomatis, layout menyesuaikan ===== */
+function catalogLayout() {
+  const grid = $("#menuGrid");
+  const width = grid.clientWidth || grid.parentElement.clientWidth || 320;
+  const minCard = width < 800 ? 170 : 250;
+  const cols = Math.max(2, Math.min(4, Math.floor((width + 16) / (minCard + 16))));
+  return { cols, size: cols * (cols === 2 ? 3 : 2) };
+}
+/* Jumlah kolom dan kartu per halaman mengikuti lebar area katalog; posisi halaman dijaga saat layar berubah. */
+function applyCatalogLayout() {
+  const { cols, size } = catalogLayout();
+  if (size !== menuPageSize) {
+    const firstIndex = (menuPage - 1) * menuPageSize;
+    menuPageSize = size;
+    menuPage = Math.floor(firstIndex / menuPageSize) + 1;
+  }
+  menuCols = cols;
+  const grid = $("#menuGrid");
+  grid.style.setProperty("--cols", cols);
+  grid.dataset.cols = cols;
+}
+
+(function adaptiveViewport() {
+  const root = document.documentElement;
+  let baseHeight = window.innerHeight, lastLandscape = innerWidth > innerHeight;
+  const breakpoint = w => (w < 480 ? "xs" : w < 768 ? "sm" : w < 1024 ? "md" : w < 1440 ? "lg" : "xl");
+  function apply() {
+    const w = root.clientWidth, h = window.innerHeight, landscape = w > h;
+    if (landscape !== lastLandscape) { lastLandscape = landscape; baseHeight = h; }
+    baseHeight = Math.max(baseHeight, h);
+    const vv = window.visualViewport, vh = vv ? vv.height : h;
+    root.dataset.bp = breakpoint(w);
+    root.dataset.orient = landscape ? "landscape" : "portrait";
+    root.dataset.short = h <= 520 ? "true" : "false";
+    root.dataset.input = matchMedia("(pointer: coarse)").matches ? "touch" : "mouse";
+    root.style.setProperty("--vvh", vh + "px");
+    /* Keyboard layar terbuka: tinggi tampilan menyusut drastis di perangkat sentuh */
+    document.body.classList.toggle("kb-open", matchMedia("(pointer: coarse)").matches && vh < baseHeight * 0.75);
+  }
+  apply();
+  addEventListener("resize", apply);
+  addEventListener("orientationchange", () => setTimeout(apply, 250));
+  window.visualViewport?.addEventListener("resize", apply);
+
+  /* Katalog dihitung ulang saat lebar areanya berubah (rotasi, resize, buka/tutup panel) */
+  if ("ResizeObserver" in window) {
+    let frame = 0, lastWidth = 0;
+    new ResizeObserver(entries => {
+      const width = Math.round(entries[0].contentRect.width);
+      if (width === lastWidth) return;
+      lastWidth = width;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const { cols, size } = catalogLayout();
+        if (cols !== menuCols || size !== menuPageSize) renderMenu();
+      });
+    }).observe($("#menuGrid"));
   }
 })();

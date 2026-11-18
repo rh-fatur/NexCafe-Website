@@ -1239,3 +1239,123 @@ body.nav-open::before{z-index:19}
 
 /* Tombol di header (tema, tas, hamburger/X) tetap di atas panel menu supaya bisa ditutup */
 .header-actions{position:relative;z-index:40}
+
+/* ===== Preview menu: layar penuh (HP, tablet, desktop) ===== */
+#productModal.modal-wrap{padding:0!important;align-items:stretch!important;justify-content:stretch!important;background:var(--paper)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+#productModal.modal-wrap .product-detail-card{
+  position:fixed!important;inset:0!important;width:100%!important;max-width:none!important;height:100dvh!important;max-height:none!important;
+  margin:0!important;border-radius:0!important;display:block!important;overflow-x:hidden!important;overflow-y:auto!important;
+  background:var(--paper);box-shadow:none!important;overscroll-behavior:contain;
+}
+#productModal.modal-wrap.open .product-detail-card{animation:pd-in .34s cubic-bezier(.2,.8,.2,1)}
+@keyframes pd-in{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+#productModal .pd-back{
+  position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:14px;z-index:8;display:inline-flex;align-items:center;gap:4px;
+  height:42px;padding:0 16px 0 10px;border-radius:999px;background:var(--paper);color:var(--ink);border:1px solid var(--line);
+  font:600 13px var(--sans);letter-spacing:.2px;box-shadow:0 4px 18px #0002;cursor:pointer;
+}
+#productModal .pd-photo{position:relative!important;height:auto!important;min-height:0!important;max-height:48dvh;aspect-ratio:4/3!important;background:var(--line);overflow:hidden}
+#productModal .pd-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#productModal .pd-body{max-height:none!important;overflow:visible!important;padding:24px 20px 0!important;max-width:760px;margin:0 auto}
+#productModal .pd-title{font-size:28px}
+#productModal .rating-box{flex-direction:column;align-items:stretch;gap:12px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:var(--white);margin:0 0 20px}
+#productModal .rating-box .rating-line{font-size:15px}
+#productModal .pd-rate{justify-content:space-between;width:100%}
+#productModal .pd-rate .stars-input button{font-size:30px;min-width:44px;min-height:44px}
+#productModal .detail-action-row{
+  position:sticky!important;bottom:0;z-index:4;margin:20px -20px 0!important;padding:12px 20px calc(14px + env(safe-area-inset-bottom,0px))!important;
+  background:var(--paper);border-top:1px solid var(--line);
+}
+@media(min-width:768px) and (max-width:1023px){
+  #productModal .pd-photo{aspect-ratio:16/9!important;max-height:42dvh}
+  #productModal .pd-body{padding:30px 32px 0!important}
+  #productModal .detail-action-row{margin:20px -32px 0!important;padding-left:32px!important;padding-right:32px!important}
+}
+@media(min-width:1024px){
+  #productModal.modal-wrap .product-detail-card{display:grid!important;grid-template-columns:minmax(0,1.1fr) minmax(480px,.9fr);overflow:hidden!important}
+  #productModal .pd-photo{height:100dvh!important;max-height:none;aspect-ratio:auto!important}
+  #productModal .pd-body{height:100dvh;overflow-y:auto!important;max-width:none;margin:0;padding:104px clamp(40px,5vw,84px) 0!important}
+  #productModal .pd-title{font-size:38px}
+  #productModal .detail-action-row{margin:24px calc(-1 * clamp(40px,5vw,84px)) 0!important;padding:16px clamp(40px,5vw,84px) 26px!important}
+}
+@media(prefers-reduced-motion:reduce){#productModal.modal-wrap.open .product-detail-card{animation:none}}
+#productModal .pd-body{display:flex!important;flex-direction:column}
+#productModal #productOptionsForm{display:flex;flex-direction:column;flex:1}
+#productModal #productOptionsForm .detail-action-row{margin-top:auto!important}
+#productModal #productOptionsForm .pd-note{margin-bottom:20px}
+#productModal .rating-box .rating-line{align-self:flex-start}
+
+/* =====================================================================
+   RESPONSIF ADAPTIF
+   Kondisi layar (lebar, orientasi, tinggi, sentuh/mouse, keyboard) dibaca di JS
+   dan dipasang sebagai atribut pada <html>: data-bp, data-orient, data-short, data-input.
+   ===================================================================== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+img,svg,video{max-width:100%}
+.section-wrap,.hero{min-width:0}
+
+/* Katalog: jumlah kolom dihitung JS dari lebar area katalog (--cols) */
+#menuGrid.catalog-pages{grid-template-columns:repeat(var(--cols,2),minmax(0,1fr))!important}
+#menuGrid[data-cols="3"].catalog-pages{gap:16px!important}
+#menuGrid[data-cols="4"].catalog-pages{gap:18px!important}
+#menuGrid[data-cols="4"].catalog-pages .menu-card h3{font-size:15px}
+#menuGrid[data-cols="4"].catalog-pages .menu-card-price{font-size:14px}
+#menuGrid[data-cols="4"].catalog-pages .menu-card-info{padding:10px 12px 12px!important}
+
+/* Layar sangat lebar: konten dibatasi dan tetap di tengah */
+@media(min-width:1600px){
+  .section-wrap,.hero{width:min(1440px,calc(100% - 160px))}
+  .site-header{padding-inline:max(64px,calc((100% - 1440px) / 2))}
+  .announcement{padding-inline:max(64px,calc((100% - 1440px) / 2))}
+}
+
+/* Tablet & HP: hero satu kolom supaya teks tidak terjepit */
+@media(max-width:919px){
+  .hero{grid-template-columns:minmax(0,1fr)!important;gap:28px!important;min-height:0!important;padding-block:36px 44px!important}
+  .hero-visual{height:auto!important;aspect-ratio:16/10;max-height:46dvh;margin-right:0!important;width:100%}
+  .hero-stats{grid-template-columns:repeat(3,minmax(0,1fr));max-width:560px}
+  .hero-stats>div{margin-right:0;padding-right:12px}
+}
+
+/* Perangkat sentuh: target ketuk minimal 44px */
+@media(pointer:coarse){
+  .button,.area-tab,.auth-tab,.catalog-arrow,.close-button,.pd-back,input:not([type=checkbox]):not([type=radio]),select,textarea{min-height:44px}
+  .catalog-arrow{min-width:44px}
+  .fav-button{min-width:40px;min-height:40px}
+  #menuGrid.catalog-pages .quick-add{width:40px;height:40px;min-height:40px}
+  #menuGrid.catalog-pages .fav-button{width:36px;height:36px;min-width:36px;min-height:36px}
+}
+
+/* Layar sangat kecil (≤360px) */
+@media(max-width:360px){
+  .announcement{font-size:7px;letter-spacing:.6px}
+  #menuGrid.catalog-pages{gap:10px!important}
+  #menuGrid.catalog-pages .menu-card h3{font-size:13px}
+  #menuGrid.catalog-pages .menu-card-info{padding:8px 8px 10px!important}
+  .hero-stats dd{font-size:22px}
+  .hero-stats dt{font-size:9px;letter-spacing:.4px}
+}
+
+/* HP landscape / layar pendek: header ringkas, preview jadi dua kolom */
+@media(max-height:520px) and (orientation:landscape){
+  .announcement{display:none}
+  :root{--header-h:56px}
+  .site-header{height:56px}
+  .hero{min-height:0!important;padding-block:20px 28px!important}
+  .modal-wrap .modal-card{max-height:calc(100dvh - 12px);overflow-y:auto}
+  #mainNav.main-nav{overflow-y:auto;padding-top:76px!important}
+  #productModal.modal-wrap .product-detail-card{display:grid!important;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);overflow:hidden!important}
+  #productModal .pd-photo{height:100dvh!important;max-height:none;aspect-ratio:auto!important}
+  #productModal .pd-body{height:100dvh;overflow-y:auto!important;max-width:none;margin:0;padding:68px 24px 0!important}
+  #productModal .pd-title{font-size:26px}
+  #productModal .detail-action-row{margin:14px -24px 0!important;padding:12px 24px calc(12px + env(safe-area-inset-bottom,0px))!important}
+  #productModal .pd-back{top:10px}
+}
+
+/* Keyboard layar terbuka: bar yang menempel dilepas supaya tidak menutupi kolom isian */
+body.kb-open .mini-cart{display:none!important}
+body.kb-open #productModal .detail-action-row{position:static!important}
+body.kb-open .modal-wrap{height:var(--vvh,100dvh)}
+
+/* Sisi aman (notch) pada landscape */
+.site-header,.announcement{padding-left:max(var(--gutter,16px),env(safe-area-inset-left,0px));padding-right:max(var(--gutter,16px),env(safe-area-inset-right,0px))}
